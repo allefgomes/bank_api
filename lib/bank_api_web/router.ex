@@ -9,5 +9,7 @@ defmodule BankApiWeb.Router do
     pipe_through :api
 
     post "/users/sign_up", UserController, :create
+    get "/user", UserController, :show
+    get "/users", UserController, :index
   end
 end

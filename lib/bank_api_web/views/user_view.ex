@@ -13,4 +13,18 @@ defmodule BankApiWeb.UserView do
       }
     }
   end
+
+  def render("index.json", %{users: users}) do
+    %{
+      data: render_many(users, __MODULE__, "user.json")
+    }
+  end
+
+  def render("show.json", %{user: user}) do
+    render_one(user, __MODULE__, "user.json")
+  end
+
+  def render("user.json", %{user: user}) do
+    render("account.json", %{user: user, account: user.accounts})
+  end
 end
