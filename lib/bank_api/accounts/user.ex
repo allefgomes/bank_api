@@ -22,7 +22,11 @@ defmodule BankApi.Accounts.User do
     |> validate_required([:email, :name, :password, :password_confirmation, :role])
     |> validate_format(:email, ~r/@/, message: "Invalid e-mail!")
     |> update_change(:email, &String.downcase(&1))
-    |> validate_length(:password, min: 6, max: 100, message: "Password must be between 6 to 100 digits!")
+    |> validate_length(:password,
+      min: 8,
+      max: 100,
+      message: "Password must be between 8 to 100 digits!"
+    )
     |> validate_confirmation(:password, message: "Passowrd is not equal!")
     |> unique_constraint(:email, message: "User with email already exists")
     |> hash_password()
