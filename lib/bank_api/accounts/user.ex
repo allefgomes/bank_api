@@ -12,6 +12,7 @@ defmodule BankApi.Accounts.User do
     field :password_hash, :string
     field :role, :string
 
+    has_one :accounts, BankApi.Accounts.Account
     timestamps()
   end
 
