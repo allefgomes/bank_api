@@ -7,5 +7,7 @@ defmodule BankApiWeb.Router do
 
   scope "/api", BankApiWeb do
     pipe_through :api
+
+    post "/users/sign_up", UserController, :create
   end
 end
