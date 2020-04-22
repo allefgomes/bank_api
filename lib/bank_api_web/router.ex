@@ -11,5 +11,7 @@ defmodule BankApiWeb.Router do
     post "/users/sign_up", UserController, :create
     get "/user", UserController, :show
     get "/users", UserController, :index
+
+    post "/operations/transfer", OperationController, :transfer
   end
 end

@@ -13,6 +13,8 @@ defmodule BankApi.Accounts do
   def get_users, do: Repo.all(User) |> Repo.preload(:accounts)
   def get_user!(id), do: Repo.get(User, id) |> Repo.preload(:accounts)
 
+  def get!(id), do: Repo.get(Account, id) |> Repo.preload(:user)
+
   def start_transaction(attrs \\ %{}) do
     Multi.new()
     |> Multi.insert(:user, insert_user(attrs))
