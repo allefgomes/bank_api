@@ -10,4 +10,11 @@ defmodule BankApiWeb.OperationController do
       |> render("success.json", message: message)
     end
   end
+
+  def withdraw(conn, %{"from_account_id" => from_id, "value" => value}) do
+    with {:ok, message} <- Operations.withdraw(from_id, value) do
+      conn
+      |> render("success.json", message: message)
+    end
+  end
 end
