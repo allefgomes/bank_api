@@ -24,6 +24,12 @@ defmodule BankApiWeb.UserView do
     render_one(user, __MODULE__, "user.json")
   end
 
+  def render("user_auth.json", %{user: user, token: token}) do
+    user = Map.put(render_one(user, __MODULE__, "user.json"), :token, token)
+
+    %{data: user}
+  end
+
   def render("user.json", %{user: user}) do
     render("account.json", %{user: user, account: user.accounts})
   end
