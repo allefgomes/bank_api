@@ -2,7 +2,7 @@ defmodule BankApiWeb.TransactionView do
   use BankApiWeb, :view
 
   def render("show.json", %{transaction: transaction}) do
-    %{ data: render_one(transaction, __MODULE__, "transaction.json") }
+    %{data: render_one(transaction, __MODULE__, "transaction.json")}
   end
 
   def render("transaction.json", %{transaction: transaction}) do

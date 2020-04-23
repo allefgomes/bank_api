@@ -10,4 +10,10 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-BankApi.Accounts.create_user(%{email: "allefgalmeida@gmail.com", name: "Allef Gomes", password: "12341234", password_confirmation: "12341234",role: "admin"})
+BankApi.Accounts.create_user(%{
+  email: "allefgalmeida@gmail.com",
+  name: "Allef Gomes",
+  password: "12341234",
+  password_confirmation: "12341234",
+  role: "admin"
+})

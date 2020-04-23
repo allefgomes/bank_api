@@ -18,7 +18,9 @@ defmodule BankApi.Operations do
     value = Decimal.new(value)
 
     case is_negative?(from.balance, value) do
-      true -> {:error, "you can`t have negative balance!"}
+      true ->
+        {:error, "you can`t have negative balance!"}
+
       false ->
         {:ok, from} = perform_operation(from, value, :sub) |> Repo.update()
         {:ok, "Withdraw with success!! from: #{user_name(from)}, value: #{value}"}
@@ -33,16 +35,22 @@ defmodule BankApi.Operations do
   def perform_update(from, to_id, value) do
     to = Accounts.get!(to_id)
 
-    transaction = Ecto.Multi.new()
-    |> Ecto.Multi.update(:account_from, perform_operation(from, value, :sub))
-    |> Ecto.Multi.update(:account_to, perform_operation(to, value, :add))
-    |> Repo.transaction()
+    transaction =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:account_from, perform_operation(from, value, :sub))
+      |> Ecto.Multi.update(:account_to, perform_operation(to, value, :add))
+      |> Repo.transaction()
 
     case transaction do
       {:ok, _} ->
-        {:ok, "Tranfer with success!! from: #{user_name(from)} to: #{user_name(to)} value: #{value}"}
-      {:error, :account_from, changeset, _} -> {:error, changeset}
-      {:error, :account_to, changeset, _} -> {:error, changeset}
+        {:ok,
+         "Tranfer with success!! from: #{user_name(from)} to: #{user_name(to)} value: #{value}"}
+
+      {:error, :account_from, changeset, _} ->
+        {:error, changeset}
+
+      {:error, :account_to, changeset, _} ->
+        {:error, changeset}
     end
   end
 

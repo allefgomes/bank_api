@@ -9,7 +9,7 @@ defmodule BankApiWeb.UserView do
       role: user.role,
       account: %{
         balance: account.balance,
-        account_id: account.id,
+        account_id: account.id
       }
     }
   end
