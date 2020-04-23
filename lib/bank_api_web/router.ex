@@ -16,5 +16,8 @@ defmodule BankApiWeb.Router do
     post "/operations/withdraw", OperationController, :withdraw
 
     get "/transactions/all", TransactionController, :all
+    get "/transactions/year/:year", TransactionController, :year
+    get "/transactions/year/:year/month/:month", TransactionController, :month
+    get "/transactions/day/:day", TransactionController, :day
   end
 end
