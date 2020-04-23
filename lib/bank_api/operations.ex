@@ -7,21 +7,15 @@ defmodule BankApi.Operations do
 
   @withdraw "withdraw"
   @transfer "transfer"
-  def transfer(from_id, to_id, value) do
-    from = Accounts.get!(from_id)
-    value = Decimal.new(value)
-
-    case is_negative?(from.balance, value) do
+  def transfer(from, to_id, value) do
+    case is_negative?(from.accounts.balance, value) do
       true -> {:error, "you can`t have negative balance!"}
       false -> perform_update(from, to_id, value)
     end
   end
 
-  def withdraw(from_id, value) do
-    from = Accounts.get!(from_id)
-    value = Decimal.new(value)
-
-    case is_negative?(from.balance, value) do
+  def withdraw(from, value) do
+    case is_negative?(from.accounts.balance, value) do
       true ->
         {:error, "you can`t have negative balance!"}
 
@@ -31,10 +25,10 @@ defmodule BankApi.Operations do
   end
 
   defp withdraw_operations(from, value) do
-    message = "Withdraw with success!! from: #{user_name(from)}, value: #{value}"
+    message = "Withdraw with success!! from: #{from.name}, value: #{value}"
 
     Multi.new()
-    |> Multi.update(:account_from, perform_operation(from, value, :sub))
+    |> Multi.update(:account_from, perform_operation(from.accounts, value, :sub))
     |> Multi.insert(:transaction, generate_transaction(from.id, nil, @withdraw, value))
     |> Repo.transaction()
     |> transaction_case(message)
@@ -43,11 +37,10 @@ defmodule BankApi.Operations do
   def perform_update(from, to_id, value) do
     to = Accounts.get!(to_id)
 
-    message =
-      "Tranfer with success!! from: #{user_name(from)} to: #{user_name(to)} value: #{value}"
+    message = "Tranfer with success!! from: #{from.name} to: #{to.user.name} value: #{value}"
 
     Multi.new()
-    |> Multi.update(:account_from, perform_operation(from, value, :sub))
+    |> Multi.update(:account_from, perform_operation(from.accounts, value, :sub))
     |> Multi.update(:account_to, perform_operation(to, value, :add))
     |> Multi.insert(:transaction, generate_transaction(from.id, to.id, @transfer, value))
     |> Repo.transaction()
@@ -79,10 +72,6 @@ defmodule BankApi.Operations do
       {:error, :account_to, changeset, _} ->
         {:error, changeset}
     end
-  end
-
-  defp user_name(account) do
-    account.user.name
   end
 
   defp generate_transaction(from_id, to_id, type, value) do
