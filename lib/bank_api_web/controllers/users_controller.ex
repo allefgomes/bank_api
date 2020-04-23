@@ -1,6 +1,7 @@
 defmodule BankApiWeb.UserController do
   use BankApiWeb, :controller
   alias BankApi.Accounts
+  alias BankApi.Accounts.Auth.Guardian
 
   action_fallback BankApiWeb.FallbackController
 
@@ -19,10 +20,11 @@ defmodule BankApiWeb.UserController do
   end
 
   def signin(conn, %{"email" => email, "password" => password}) do
-    user = BankApi.Repo.get!(BankApi.Accounts.User, "efaa7058-65e6-4262-b08f-2a188040abd4")
-    |> BankApi.Repo.preload(:accounts)
-
-    render(conn, "user_auth.json", user: user, token: "token")
+    with {:ok, user, token} <- Guardian.authenticate(email, password) do
+      conn
+      |> put_status(:created)
+      |> render("user_auth.json", user: user, token: token)
+    end
   end
 
   def show(conn, %{"id" => id}) do

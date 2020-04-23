@@ -7,6 +7,10 @@
 # General application configuration
 use Mix.Config
 
+config :bank_api, BankApi.Accounts.Auth.Guardian,
+  issuer: "bank_api",
+  secret_key: System.get_env("GUARDIAN_SECRET")
+
 config :bank_api,
   ecto_repos: [BankApi.Repo]
 
