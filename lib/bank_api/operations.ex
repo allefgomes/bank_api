@@ -3,18 +3,18 @@ defmodule BankApi.Operations do
   alias BankApi.Accounts.Account
   alias BankApi.Repo
 
-  def transfer(f_id, t_id, value) do
-    from = Accounts.get!(f_id)
+  def transfer(from_id, to_id, value) do
+    from = Accounts.get!(from_id)
     value = Decimal.new(value)
 
     case is_negative?(from.balance, value) do
       true -> {:error, "you can`t have negative balance!"}
-      false -> perform_update(from, t_id, value)
+      false -> perform_update(from, to_id, value)
     end
   end
 
-  def withdraw(f_id, value) do
-    from = Accounts.get!(f_id)
+  def withdraw(from_id, value) do
+    from = Accounts.get!(from_id)
     value = Decimal.new(value)
 
     case is_negative?(from.balance, value) do
@@ -30,8 +30,8 @@ defmodule BankApi.Operations do
     |> Decimal.negative?()
   end
 
-  def perform_update(from, t_id, value) do
-    to = Accounts.get!(t_id)
+  def perform_update(from, to_id, value) do
+    to = Accounts.get!(to_id)
 
     transaction = Ecto.Multi.new()
     |> Ecto.Multi.update(:account_from, perform_operation(from, value, :sub))
